@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Art Space</string>
+    <!-- Titles -->
+    <string name="title_1">Still Life of Blue Rose and Other Flowers</string>
+    <string name="title_2">Morning Light Through the Window</string>
+    <string name="title_3">Autumn Garden in Watercolor</string>
+    <string name="title_4">The Candle and the Lonely Cup</string>
+    <!-- Artists -->
+    <string name="artist_1_name">Owen Scott</string>
+    <string name="artist_2_name">Emily Harris</string>
+    <string name="artist_3_name">Takashi Ito</string>
+    <string name="artist_4_name">Lena Müller</string>
+    <!-- Years -->
+    <string name="artist_1_year">2021</string>
+    <string name="artist_2_year">2019</string>
+    <string name="artist_3_year">2020</string>
+    <string name="artist_4_year">2022</string>
+    <!-- Buttons -->
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+</resources>
