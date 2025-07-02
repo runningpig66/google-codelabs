@@ -18,17 +18,17 @@ It allows users to view and navigate through a small gallery of artworks, displa
 
 ## Screenshots
 
-<img src="https://raw.githubusercontent.com/runningpig66/PicGo/master/202507012315428.png" alt="Screenshot_20250701-231340" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/runningpig66/PicGo/master/202507012315428.png" alt="Screenshot_20250701-231340" style="zoom:25%;" />
 
 ---
 
 ## Version History
 
-| Version | Description                                               |
-|---------|-----------------------------------------------------------|
-| `v0.1`  | Implement scrollable layout with static content           |
-| `v0.2`  | Enable image navigation with Previous/Next buttons        |
-| `v0.3`  | Create alternate layout without scrolling (responsive UI) |
+| Version | Description                                        |
+|---------|----------------------------------------------------|
+| `v0.1`  | Implement scrollable layout with static content    |
+| `v0.2`  | Enable image navigation with Previous/Next buttons |
+| `v0.3`  | Coming soon                                        |
 
 ---
 
@@ -44,12 +44,11 @@ It allows users to view and navigate through a small gallery of artworks, displa
 
 ## Project Structure
 
-MainActivity.kt           // App entry point
-ArtSpaceApp()          // Main Composable
-ArtImageDisplay()     // Image rendering with Surface
-ArtDescription()         // Title + Artist info
-ArtNavigationControls()  // Navigation buttons
-
+MainActivity.kt           // App entry point  
+ArtSpaceApp()             // Main Composable  
+ArtImageDisplay()         // Image rendering with Surface  
+ArtDescription()          // Title + Artist info  
+ArtNavigationControls()   // Navigation buttons
 
 ## Keywords
 
@@ -61,7 +60,7 @@ This project is released under the MIT License. See LICENSE file for details.
 
 ## Author
 
-TIAN YANYU
-Email: runningpig66@gmail.com
-GitHub: https://github.com/runningpig66
+TIAN YANYU  
+Email: runningpig66@gmail.com  
+GitHub: https://github.com/runningpig66  
 Location: Japan / China

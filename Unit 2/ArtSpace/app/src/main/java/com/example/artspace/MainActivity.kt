@@ -23,6 +23,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,6 +60,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ArtSpaceApp(modifier: Modifier = Modifier) {
+    var currentIndex by remember { mutableIntStateOf(0) }
+    val images = listOf(R.drawable.image_1, R.drawable.image_2, R.drawable.image_3, R.drawable.image_4)
+    val titles = listOf(R.string.title_1, R.string.title_2, R.string.title_3, R.string.title_4)
+    val artists = listOf(R.string.artist_1_name, R.string.artist_2_name, R.string.artist_3_name, R.string.artist_4_name)
+    val years = listOf(R.string.artist_1_year, R.string.artist_2_year, R.string.artist_3_year, R.string.artist_4_year)
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -71,20 +81,28 @@ fun ArtSpaceApp(modifier: Modifier = Modifier) {
          * 但在高度空间不足（如横屏或内容过多）时，weight 子项可能被压缩，导致内容显示不完整甚至完全看不到。
          */
         ArtImageDisplay(
+            imageId = images[currentIndex]
             // 所以不应该在这里设置 weight，更不应该将设置后的 modifier 传入子项 Box 中，否则会导致横屏图像压缩，且 Column 不可滚动。
 //            modifier = Modifier.weight(1F)
         )
         Spacer(modifier = Modifier.weight(1F))
-        ArtDescription()
-        ArtNavigationControls()
+        ArtDescription(titles[currentIndex], artists[currentIndex], years[currentIndex])
+        ArtNavigationControls(
+            previousOnClicked = {
+                currentIndex = (currentIndex - 1 + images.size) % images.size
+            },
+            nextOnClicked = {
+                currentIndex = (currentIndex + 1) % images.size
+            }
+        )
     }
 }
 
 @Composable
-fun ArtImageDisplay() {
+fun ArtImageDisplay(imageId: Int) {
     Surface(shadowElevation = 8.dp) {
         Image(
-            painter = painterResource(R.drawable.image_1),
+            painter = painterResource(imageId),
             contentDescription = null,
             modifier = Modifier
                 .width(540.dp)
@@ -96,7 +114,7 @@ fun ArtImageDisplay() {
 }
 
 @Composable
-fun ArtDescription() {
+fun ArtDescription(titleId: Int, artistId: Int, yearId: Int) {
     Text(
         text = buildAnnotatedString {
             withStyle(
@@ -105,7 +123,7 @@ fun ArtDescription() {
                     fontWeight = FontWeight.Light,
                 )
             ) {
-                append(stringResource(R.string.title_1) + "\n")
+                append(stringResource(titleId) + "\n")
             }
             withStyle(
                 style = SpanStyle(
@@ -113,7 +131,7 @@ fun ArtDescription() {
                     fontWeight = FontWeight.Bold
                 )
             ) {
-                append(stringResource(R.string.artist_1_name) + " ")
+                append(stringResource(artistId) + " ")
             }
             withStyle(
                 style = SpanStyle(
@@ -122,7 +140,7 @@ fun ArtDescription() {
                     baselineShift = BaselineShift(0.16F)
                 )
             ) {
-                append(stringResource(R.string.artist_1_year))
+                append(stringResource(yearId))
             }
         },
         modifier = Modifier
@@ -134,7 +152,7 @@ fun ArtDescription() {
 }
 
 @Composable
-fun ArtNavigationControls() {
+fun ArtNavigationControls(previousOnClicked: () -> Unit, nextOnClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,7 +160,7 @@ fun ArtNavigationControls() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Button(
-            onClick = {},
+            onClick = previousOnClicked,
             modifier = Modifier
                 .width(160.dp)
                 .height(44.dp)
@@ -153,7 +171,7 @@ fun ArtNavigationControls() {
             )
         }
         Button(
-            onClick = {},
+            onClick = nextOnClicked,
             modifier = Modifier
                 .width(160.dp)
                 .height(44.dp)

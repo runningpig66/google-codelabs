@@ -11,10 +11,10 @@
     <string name="artist_3_name">Takashi Ito</string>
     <string name="artist_4_name">Lena Müller</string>
     <!-- Years -->
-    <string name="artist_1_year">2021</string>
-    <string name="artist_2_year">2019</string>
-    <string name="artist_3_year">2020</string>
-    <string name="artist_4_year">2022</string>
+    <string name="artist_1_year">(2021)</string>
+    <string name="artist_2_year">(2019)</string>
+    <string name="artist_3_year">(2020)</string>
+    <string name="artist_4_year">(2022)</string>
     <!-- Buttons -->
     <string name="previous">Previous</string>
     <string name="next">Next</string>
