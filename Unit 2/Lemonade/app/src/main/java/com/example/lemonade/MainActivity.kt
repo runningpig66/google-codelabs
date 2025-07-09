@@ -57,6 +57,7 @@ fun LemonadeApp() {
     var squeezeCount by remember { mutableIntStateOf(0) }
 
     Scaffold(
+        // NOTE: 自定义 topBar
         topBar = {
             CenterAlignedTopAppBar(
                 title = {

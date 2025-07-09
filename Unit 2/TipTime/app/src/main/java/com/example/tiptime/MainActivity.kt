@@ -70,6 +70,7 @@ fun TipTimeLayout() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            // NOTE: 自定义硬件边距1，AffirmationsAppも
             .statusBarsPadding()
             .safeDrawingPadding()
             .padding(40.dp)
