@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.taskcompleted.ui.theme.TaskCompletedTheme
 
-// // Unit 1: Task Completed App
+// Unit 1: Task Completed App
 // https://github.com/google-developer-training/basic-android-kotlin-compose-training-practice-problems/tree/main/Unit%201/Pathway%203/TaskCompleted
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
