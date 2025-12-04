@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,6 +68,12 @@ class MainActivity : ComponentActivity() {
 @Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
 @Composable
 fun ArtSpaceApp(modifier: Modifier = Modifier) {
+    var currentIndex by remember { mutableIntStateOf(0) }
+    val images = listOf(R.drawable.image_1, R.drawable.image_2, R.drawable.image_3, R.drawable.image_4)
+    val titles = listOf(R.string.title_1, R.string.title_2, R.string.title_3, R.string.title_4)
+    val artists = listOf(R.string.artist_1_name, R.string.artist_2_name, R.string.artist_3_name, R.string.artist_4_name)
+    val years = listOf(R.string.artist_1_year, R.string.artist_2_year, R.string.artist_3_year, R.string.artist_4_year)
+
     BoxWithConstraints(
         modifier = modifier.fillMaxSize()
     ) {
@@ -80,30 +91,44 @@ fun ArtSpaceApp(modifier: Modifier = Modifier) {
             if (isPortrait) { // 竖屏
                 Spacer(modifier = Modifier.weight(1f))
                 if (screenRatio > 1.7f) { // 手机竖屏
-                    ArtImageDisplay(modifier = Modifier.fillMaxWidth())
+                    ArtImageDisplay(imageRes = images[currentIndex], modifier = Modifier.fillMaxWidth())
                 } else { // 平板竖屏
-                    ArtImageDisplay(modifier = Modifier.fillMaxWidth(0.7f))
+                    ArtImageDisplay(imageRes = images[currentIndex], modifier = Modifier.fillMaxWidth(0.7f))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             } else { // 横屏
                 // TODO 手机横屏状态下，屏幕高度不足，图片布局 weight = 1f 导致过度缩小，学习屏幕适配后完善
-                ArtImageDisplay(modifier = Modifier.weight(1f)) // 横屏状态占满屏幕剩余高度
+                ArtImageDisplay(imageRes = images[currentIndex], modifier = Modifier.weight(1f)) // 横屏状态占满屏幕剩余高度
             }
-            ArtDescription()
-            ArtNavigationControls()
+            ArtDescription(
+                titleRes = titles[currentIndex],
+                artistRes = artists[currentIndex],
+                yearRes = years[currentIndex]
+            )
+            ArtNavigationControls(
+                previousOnClick = {
+                    currentIndex = (currentIndex - 1 + images.size) % images.size
+                },
+                nextOnClick = {
+                    currentIndex = (currentIndex + 1) % images.size
+                }
+            )
         }
     }
 }
 
 // 上方的图片布局
 @Composable
-fun ArtImageDisplay(modifier: Modifier = Modifier) {
+fun ArtImageDisplay(
+    @DrawableRes imageRes: Int,
+    modifier: Modifier = Modifier
+) {
     Surface(
         shadowElevation = 8.dp,
         modifier = modifier.padding(top = 20.dp) // 这里的padding是为了对称下方文本的topPadding 20.dp
     ) {
         Image(
-            painter = painterResource(R.drawable.image_1),
+            painter = painterResource(id = imageRes),
             contentDescription = null,
             modifier = Modifier
                 .aspectRatio(3f / 4f)
@@ -115,7 +140,12 @@ fun ArtImageDisplay(modifier: Modifier = Modifier) {
 
 // 图片下方的描述文本
 @Composable
-fun ArtDescription(modifier: Modifier = Modifier) {
+fun ArtDescription(
+    @StringRes titleRes: Int,
+    @StringRes artistRes: Int,
+    @StringRes yearRes: Int,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier.padding(top = 20.dp)
     ) {
@@ -129,7 +159,7 @@ fun ArtDescription(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.Light
                     )
                 ) {
-                    append(stringResource(R.string.title_1) + "\n")
+                    append(stringResource(id = titleRes) + "\n")
                 }
                 // artist
                 withStyle(
@@ -138,7 +168,7 @@ fun ArtDescription(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.Bold
                     )
                 ) {
-                    append(stringResource(R.string.artist_1_name) + " ")
+                    append(stringResource(id = artistRes) + " ")
                 }
                 // year
                 withStyle(
@@ -148,7 +178,7 @@ fun ArtDescription(modifier: Modifier = Modifier) {
                         baselineShift = BaselineShift(0.16f)
                     )
                 ) {
-                    append(stringResource(R.string.artist_1_year))
+                    append(stringResource(id = yearRes))
                 }
             },
             modifier = Modifier
@@ -162,7 +192,11 @@ fun ArtDescription(modifier: Modifier = Modifier) {
 
 // 底部的 2 个导航按钮
 @Composable
-fun ArtNavigationControls(modifier: Modifier = Modifier) {
+fun ArtNavigationControls(
+    previousOnClick: () -> Unit,
+    nextOnClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -171,11 +205,11 @@ fun ArtNavigationControls(modifier: Modifier = Modifier) {
     ) {
         NavButton(
             textRes = R.string.previous,
-            onClick = {}
+            onClick = previousOnClick
         )
         NavButton(
             textRes = R.string.next,
-            onClick = {}
+            onClick = nextOnClick
         )
     }
 }
