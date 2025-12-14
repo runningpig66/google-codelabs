@@ -55,6 +55,8 @@ import com.example.courses.model.Topic
 import com.example.courses.ui.theme.CoursesTheme
 import kotlinx.coroutines.launch
 
+// Unit 3: Courses App
+// https://github.com/google-developer-training/basic-android-kotlin-compose-training-courses.git
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
