@@ -5,23 +5,38 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +49,7 @@ import com.example.woof.data.Dog
 import com.example.woof.data.dogs
 import com.example.woof.ui.theme.WoofTheme
 
-// Unit 3: Woof App  App [git checkout material]
+// Unit 3: Woof App [git checkout main]
 // https://github.com/google-developer-training/basic-android-kotlin-compose-training-woof.git
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,18 +99,89 @@ fun DogItem(
     dog: Dog,
     modifier: Modifier = Modifier
 ) {
+    // 使用 `mutableStateOf()` 函数，让 Compose 能够观察到状态值的任何变化，并在状态发生改变时触发重新组合（recomposition），从而更新 UI。
+    // 把对 `mutableStateOf()` 的调用用 `remember()` 包裹起来，这样在首次组合（initial composition）时会把该值存储在 Composition 中，
+    // 而在之后的重新组合时会返回之前存储的值。
+    // TODO 展开的时候，滑动列表再回来，expanded 状态会丢失
+    var expanded by remember { mutableStateOf(false) }
+    // TODO 颜色渐变如果添加中间值可能更好
+    val color by animateColorAsState(
+        targetValue = if (expanded) {
+            MaterialTheme.colorScheme.tertiaryContainer
+        } else {
+            MaterialTheme.colorScheme.primaryContainer
+        },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        )
+    )
     Card(
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = color)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small))
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
         ) {
-            DogIcon(dog.imageResourceId)
-            DogInformation(dog.name, dog.age)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_small))
+            ) {
+                DogIcon(dog.imageResourceId)
+                DogInformation(dog.name, dog.age)
+                Spacer(modifier = Modifier.weight(1f))
+                DogItemButton(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded }
+                )
+            }
+            // TODO 这里收缩的时候 DogHobby 会瞬时没有文字而展现空白背景有点突兀；希望实现：
+            //  底部线条收缩完成后再让 DogHobby 文字消失，有一种线条拉起来覆盖掉文字的感觉可能更好一点。
+            if (expanded) {
+                DogHobby(
+                    dog.hobbies,
+                    modifier = Modifier.padding(
+                        start = dimensionResource(R.dimen.padding_medium),
+                        top = dimensionResource(R.dimen.padding_small),
+                        end = dimensionResource(R.dimen.padding_medium),
+                        bottom = dimensionResource(R.dimen.padding_medium)
+                    )
+                )
+            }
         }
+    }
+}
+
+/**
+ * Composable that displays a button that is clickable and displays an expand more or an expand less icon.
+ *
+ * @param expanded represents whether the expand more or expand less icon is visible
+ * @param onClick is the action that happens when the button is clicked
+ * @param modifier modifiers to set to this composable
+ */
+@Composable
+private fun DogItemButton(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = stringResource(R.string.expand_button_content_description),
+            tint = MaterialTheme.colorScheme.secondary
+        )
     }
 }
 
@@ -182,17 +268,38 @@ fun DogInformation(
 }
 
 /**
+ * Composable that displays a dog's hobbies.
+ *
+ * @param dogHobby is the resource ID for the text string of the hobby to display
+ * @param modifier modifiers to set to this composable
+ */
+@Composable
+fun DogHobby(
+    @StringRes dogHobby: Int,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(R.string.about),
+            style = MaterialTheme.typography.labelSmall
+        )
+        Text(
+            text = stringResource(dogHobby),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+/**
  * Composable that displays what the UI of the app looks like in light theme in the design tab.
  */
 @Preview
 @Composable
 fun WoofPreview() {
     WoofTheme(darkTheme = false) {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            WoofApp()
-        }
+        WoofApp()
     }
 }
 
@@ -203,10 +310,6 @@ fun WoofPreview() {
 @Composable
 fun WoofDarkThemePreview() {
     WoofTheme(darkTheme = true) {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            WoofApp()
-        }
+        WoofApp()
     }
 }
