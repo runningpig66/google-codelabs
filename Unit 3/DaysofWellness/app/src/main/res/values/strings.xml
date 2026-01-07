@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Days of Wellness</string>
+    <string name="day1_title">Spend 15 minutes outdoors</string>
+    <string name="day1_desc">Put some time on your calendar to take a walk outside or maybe even take a meeting while you\'re strolling through your neighborhood.</string>
+    <string name="day2_title">Listen to a new podcast</string>
+    <string name="day2_desc">Listen to a podcast and explore a topic you\'ve been itching to learn more about or discover a completely new topic or genre.</string>
+    <string name="day3_title">Declutter one small space</string>
+    <string name="day3_desc">Choose a drawer, a shelf, or your desktop. Spend 10 minutes organizing it. A clear space often leads to a clear mind.</string>
+    <string name="day4_title">Cook a new recipe</string>
+    <string name="day4_desc">Find a recipe you\'ve never tried before. It doesn\'t have to be complex—just something fresh to tickle your taste buds.</string>
+    <string name="day5_title">Digital Detox for 1 hour</string>
+    <string name="day5_desc">Put your phone in another room and turn off screens. Read a book, draw, or just sit and relax without notifications.</string>
+    <string name="day6_title">Call an old friend</string>
+    <string name="day6_desc">Reach out to someone you haven\'t spoken to in a while. A quick 10-minute catch-up call can boost your mood significantly.</string>
+    <string name="day7_title">Write down 3 gratitudes</string>
+    <string name="day7_desc">Before bed, write down three things that made you smile today. Focusing on the positive helps improve sleep quality.</string>
+</resources>
