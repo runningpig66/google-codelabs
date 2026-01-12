@@ -1,6 +1,5 @@
 package com.example.unscramble.ui
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -55,7 +54,7 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     // Checks if the user's guess is correct. Increases the score accordingly.
     fun checkUserGuess() {
-        Log.d("GameViewModel", "userGuess: $userGuess")
+        // Log.d("GameViewModel", "userGuess: $userGuess")
         if (userGuess.equals(currentWord, ignoreCase = true)) {
             // User's guess is correct, increase the score
             // and call updateGameState() to prepare the game for next round
@@ -118,7 +117,7 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
             pickRandomWordAndShuffle()
         } else {
             usedWords.add(currentWord)
-            Log.d("GameViewModel", "currentWord: $currentWord")
+            // Log.d("GameViewModel", "currentWord: $currentWord")
             shuffleCurrentWord(currentWord)
         }
     }

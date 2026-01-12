@@ -53,7 +53,32 @@ fun GameScreen(
     modifier: Modifier = Modifier,
     gameViewModel: GameViewModel = viewModel()
 ) {
+    // 从 ViewModel 收集 UI 状态
     val gameUiState by gameViewModel.uiState.collectAsState()
+    // 将状态和逻辑传递给 Stateless 组件 (GameBody)
+    GameBody(
+        gameUiState = gameUiState,
+        userGuess = gameViewModel.userGuess,
+        onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
+        onKeyboardDone = { gameViewModel.checkUserGuess() },
+        onCheck = { gameViewModel.checkUserGuess() },
+        onSkip = { gameViewModel.skipWord() },
+        onPlayAgain = { gameViewModel.resetGame() },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun GameBody(
+    gameUiState: GameUiState,
+    userGuess: String,
+    onUserGuessChanged: (String) -> Unit,
+    onKeyboardDone: () -> Unit,
+    onCheck: () -> Unit,
+    onSkip: () -> Unit,
+    onPlayAgain: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
     Column(
@@ -72,9 +97,9 @@ fun GameScreen(
             currentScrambledWord = gameUiState.currentScrambledWord,
             wordCount = gameUiState.currentWordCount,
             isGuessWrong = gameUiState.isGuessedWordWrong,
-            userGuess = gameViewModel.userGuess,
-            onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
-            onKeyboardDone = { gameViewModel.checkUserGuess() },
+            userGuess = userGuess,
+            onUserGuessChanged = onUserGuessChanged,
+            onKeyboardDone = onKeyboardDone,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -89,7 +114,7 @@ fun GameScreen(
         ) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { gameViewModel.checkUserGuess() }
+                onClick = onCheck
             ) {
                 Text(
                     text = stringResource(R.string.submit),
@@ -97,7 +122,7 @@ fun GameScreen(
                 )
             }
             OutlinedButton(
-                onClick = { gameViewModel.skipWord() },
+                onClick = onSkip,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -114,7 +139,7 @@ fun GameScreen(
     if (gameUiState.isGameOver) {
         FinalScoreDialog(
             score = gameUiState.score,
-            onPlayAgain = { gameViewModel.resetGame() }
+            onPlayAgain = onPlayAgain
         )
     }
 }
@@ -251,7 +276,20 @@ fun GameScreenPreview() {
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             // FinalScoreDialog(score = 100, onPlayAgain = {})
-            GameScreen(
+            GameBody(
+                gameUiState = GameUiState(
+                    currentScrambledWord = "EVOL",
+                    currentWordCount = 1,
+                    score = 0,
+                    isGuessedWordWrong = false,
+                    isGameOver = false
+                ),
+                userGuess = "HATE",
+                onUserGuessChanged = {},
+                onKeyboardDone = {},
+                onCheck = {},
+                onSkip = {},
+                onPlayAgain = {},
                 modifier = Modifier.padding(innerPadding)
             )
         }
