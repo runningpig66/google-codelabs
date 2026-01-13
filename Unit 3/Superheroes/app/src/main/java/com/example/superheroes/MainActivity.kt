@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -70,6 +71,13 @@ fun TopAppBar(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.displayLarge
             )
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+//            scrolledContainerColor = MaterialTheme.colorScheme.surface,
+//            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
         modifier = modifier
     )
 }
