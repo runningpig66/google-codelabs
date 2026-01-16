@@ -89,6 +89,9 @@ class OrderViewModel : ViewModel() {
 
     /**
      * Returns a list of date options starting with the current date and the following 3 dates.
+     * 旧写法 (当前): Calendar, SimpleDateFormat
+     * 新写法 (未来): LocalDate, DateTimeFormatter
+     * TODO 等你做完这个项目，以后开发自己的 App 时，记得去了解一下 java.time。
      */
     private fun pickupOptions(): List<String> {
         val dateOptions = mutableListOf<String>()

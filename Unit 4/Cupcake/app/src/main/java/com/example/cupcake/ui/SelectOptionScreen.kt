@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
@@ -41,7 +42,9 @@ fun SelectOptionScreen(
     subtotal: String,
     options: List<String>,
     modifier: Modifier = Modifier,
-    onSelectionChanged: (String) -> Unit = {}
+    onSelectionChanged: (String) -> Unit = {},
+    onCancelButtonClicked: () -> Unit = {},
+    onNextButtonClicked: () -> Unit = {}
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
     Column(
@@ -85,17 +88,20 @@ fun SelectOptionScreen(
             )
         }
         Row(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_medium)),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+            verticalAlignment = Alignment.Bottom
         ) {
             OutlinedButton(
-                onClick = {},
+                onClick = onCancelButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.cancel))
             }
             Button(
-                onClick = {},
+                onClick = onNextButtonClicked,
                 modifier = Modifier.weight(1f),
                 // the button is enabled when the user makes a selection
                 enabled = selectedValue.isNotEmpty()

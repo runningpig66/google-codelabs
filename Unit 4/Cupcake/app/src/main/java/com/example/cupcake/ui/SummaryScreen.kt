@@ -35,7 +35,9 @@ import com.example.cupcake.ui.theme.CupcakeTheme
 @Composable
 fun OrderSummaryScreen(
     orderUiState: OrderUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCancelButtonClicked: () -> Unit,
+    onSendButtonClicked: (String, String) -> Unit
 ) {
     val resources = LocalResources.current
     val numberOfCupcakes = resources.getQuantityString(
@@ -50,13 +52,16 @@ fun OrderSummaryScreen(
         numberOfCupcakes,
         orderUiState.flavor,
         orderUiState.date,
-        orderUiState.quantity
+        orderUiState.price
     )
     val newOrder = stringResource(R.string.new_cupcake_order)
     //Create a list of order summary to display
     val items = listOf(
+        // Summary line 1: display selected quantity
         Pair(stringResource(R.string.quantity), numberOfCupcakes),
+        // Summary line 2: display selected flavor
         Pair(stringResource(R.string.flavor), orderUiState.flavor),
+        // Summary line 3: display selected pickup date
         Pair(stringResource(R.string.pickup_date), orderUiState.date)
     )
     Column(
@@ -86,13 +91,13 @@ fun OrderSummaryScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
         ) {
             Button(
-                onClick = {},
+                onClick = { onSendButtonClicked(newOrder, orderSummary) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = stringResource(R.string.send))
             }
             OutlinedButton(
-                onClick = {},
+                onClick = onCancelButtonClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = stringResource(R.string.cancel))
@@ -112,7 +117,9 @@ fun OrderSummaryPreview() {
                 date = "Fri Nov 17",
                 price = "$24.00"
             ),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            onCancelButtonClicked = {},
+            onSendButtonClicked = { subject: String, summary: String -> }
         )
     }
 }
