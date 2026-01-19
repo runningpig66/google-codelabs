@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.cupcake.ui.theme.CupcakeTheme
 
-// Unit 4: Cupcake App [git checkout navigation]
+// Unit 4: Cupcake App [git checkout main]
 // https://github.com/google-developer-training/basic-android-kotlin-compose-training-cupcake.git
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
