@@ -1,0 +1,50 @@
+package com.example.lunchtray.ui
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.lunchtray.R
+import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.model.MenuItem.AccompanimentItem
+
+/**
+ * @author runningpig66
+ * @date 2026/1/23 周五
+ * @time 3:11
+ */
+@Composable
+fun AccompanimentMenuScreen(
+    options: List<AccompanimentItem>,
+    modifier: Modifier = Modifier,
+    onCancelButtonClicked: () -> Unit,
+    onNextButtonClicked: () -> Unit,
+    onSelectionChanged: (AccompanimentItem) -> Unit
+) {
+    BaseMenuScreen(
+        options = options,
+        modifier = modifier,
+        onCancelButtonClicked = onCancelButtonClicked,
+        onNextButtonClicked = onNextButtonClicked,
+        onSelectionChanged = onSelectionChanged
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AccompanimentMenuPreview() {
+    AccompanimentMenuScreen(
+        options = DataSource.accompanimentMenuItems,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(R.dimen.padding_medium))
+            .verticalScroll(rememberScrollState()),
+        onCancelButtonClicked = {},
+        onNextButtonClicked = {},
+        onSelectionChanged = {}
+    )
+}
