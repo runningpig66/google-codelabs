@@ -111,6 +111,7 @@ fun LunchTrayApp() {
                 EntreeMenuScreen(
                     options = DataSource.entreeMenuItems,
                     modifier = Modifier.verticalScroll(rememberScrollState()),
+                    selectedItemName = uiState.entree?.name ?: "",
                     onCancelButtonClicked = {
                         viewModel.resetOrder()
                         navController.popBackStack(LunchTrayScreen.Start.name, false)
@@ -127,6 +128,7 @@ fun LunchTrayApp() {
                 SideDishMenuScreen(
                     options = DataSource.sideDishMenuItems,
                     modifier = Modifier.verticalScroll(rememberScrollState()),
+                    selectedItemName = uiState.sideDish?.name ?: "",
                     onCancelButtonClicked = {
                         viewModel.resetOrder()
                         navController.popBackStack(LunchTrayScreen.Start.name, false)
@@ -143,6 +145,7 @@ fun LunchTrayApp() {
                 AccompanimentMenuScreen(
                     options = DataSource.accompanimentMenuItems,
                     modifier = Modifier.verticalScroll(rememberScrollState()),
+                    selectedItemName = uiState.accompaniment?.name ?: "",
                     onCancelButtonClicked = {
                         viewModel.resetOrder()
                         navController.popBackStack(LunchTrayScreen.Start.name, false)

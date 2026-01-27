@@ -21,6 +21,7 @@ import com.example.lunchtray.model.MenuItem.EntreeItem
 fun EntreeMenuScreen(
     options: List<EntreeItem>,
     modifier: Modifier = Modifier,
+    selectedItemName: String,
     onCancelButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
     onSelectionChanged: (EntreeItem) -> Unit
@@ -28,6 +29,7 @@ fun EntreeMenuScreen(
     BaseMenuScreen(
         options = options,
         modifier = modifier,
+        selectedItemName = selectedItemName,
         onCancelButtonClicked = onCancelButtonClicked,
         onNextButtonClicked = onNextButtonClicked,
         onSelectionChanged = onSelectionChanged
@@ -43,6 +45,7 @@ fun EntreeMenuPreview() {
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.padding_medium))
             .verticalScroll(rememberScrollState()),
+        selectedItemName = "",
         onCancelButtonClicked = {},
         onNextButtonClicked = {},
         onSelectionChanged = {}

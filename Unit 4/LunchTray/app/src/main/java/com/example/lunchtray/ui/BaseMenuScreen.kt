@@ -16,10 +16,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -38,22 +34,16 @@ import com.example.lunchtray.model.MenuItem
 fun <T : MenuItem> BaseMenuScreen(
     options: List<T>,
     modifier: Modifier = Modifier,
+    selectedItemName: String,
     onCancelButtonClicked: () -> Unit = {},
     onNextButtonClicked: () -> Unit = {},
     onSelectionChanged: (T) -> Unit
 ) {
-    // TODO 建议修改 BaseMenuScreen，删除内部的 selectedItemName，直接让外部传进来！
-    // 当前使用内部 rememberSaveable 管理状态会导致“前进丢失”Bug。现象：
-    // 1. 当用户点击 Back 键时，当前页面从导航栈中 出栈 (Pop) 并被彻底销毁，其内部维持的 rememberSaveable 状态也随之消失。
-    // 2. 当用户再次点击 Next 重新进入该页面时，Navigation 会创建一个 全新的页面实例。
-    // 3. 由于新页面初始化时只使用默认值（空），且未读取 ViewModel 中的历史数据，导致用户之前选中的数据在 UI 上显示为空（看起来像丢了）。
-    // 解决方案：必须进行状态提升 (State Hoisting)，删除内部状态，强制 UI 直接从 ViewModel 读取数据。
-    var selectedItemName by rememberSaveable { mutableStateOf("") }
-
+    // DONE 建议修改 BaseMenuScreen，删除内部的 selectedItemName，直接让外部传进来！
+    // var selectedItemName by rememberSaveable { mutableStateOf("") }
     Column(modifier = modifier) {
         options.forEach { item ->
             val onClick = {
-                selectedItemName = item.name
                 onSelectionChanged(item)
             }
             MenuItemRow(
@@ -158,6 +148,7 @@ fun BaseMenuPreview() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
+        selectedItemName = "",
         onCancelButtonClicked = {},
         onNextButtonClicked = {},
         onSelectionChanged = {}

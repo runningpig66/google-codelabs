@@ -21,6 +21,7 @@ import com.example.lunchtray.model.MenuItem.AccompanimentItem
 fun AccompanimentMenuScreen(
     options: List<AccompanimentItem>,
     modifier: Modifier = Modifier,
+    selectedItemName: String,
     onCancelButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
     onSelectionChanged: (AccompanimentItem) -> Unit
@@ -28,6 +29,7 @@ fun AccompanimentMenuScreen(
     BaseMenuScreen(
         options = options,
         modifier = modifier,
+        selectedItemName = selectedItemName,
         onCancelButtonClicked = onCancelButtonClicked,
         onNextButtonClicked = onNextButtonClicked,
         onSelectionChanged = onSelectionChanged
@@ -43,6 +45,7 @@ fun AccompanimentMenuPreview() {
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.padding_medium))
             .verticalScroll(rememberScrollState()),
+        selectedItemName = "",
         onCancelButtonClicked = {},
         onNextButtonClicked = {},
         onSelectionChanged = {}
