@@ -43,6 +43,11 @@ fun <T : MenuItem> BaseMenuScreen(
     onSelectionChanged: (T) -> Unit
 ) {
     // TODO 建议修改 BaseMenuScreen，删除内部的 selectedItemName，直接让外部传进来！
+    // 当前使用内部 rememberSaveable 管理状态会导致“前进丢失”Bug。现象：
+    // 1. 当用户点击 Back 键时，当前页面从导航栈中 出栈 (Pop) 并被彻底销毁，其内部维持的 rememberSaveable 状态也随之消失。
+    // 2. 当用户再次点击 Next 重新进入该页面时，Navigation 会创建一个 全新的页面实例。
+    // 3. 由于新页面初始化时只使用默认值（空），且未读取 ViewModel 中的历史数据，导致用户之前选中的数据在 UI 上显示为空（看起来像丢了）。
+    // 解决方案：必须进行状态提升 (State Hoisting)，删除内部状态，强制 UI 直接从 ViewModel 读取数据。
     var selectedItemName by rememberSaveable { mutableStateOf("") }
 
     Column(modifier = modifier) {
@@ -55,10 +60,12 @@ fun <T : MenuItem> BaseMenuScreen(
                 item = item,
                 selectedItemName = selectedItemName,
                 onClick = onClick,
-                modifier = Modifier.selectable(
-                    selected = selectedItemName == item.name,
-                    onClick = onClick
-                )
+                modifier = Modifier
+                    .selectable(
+                        selected = selectedItemName == item.name,
+                        onClick = onClick
+                    )
+                    .padding(horizontal = dimensionResource(R.dimen.padding_medium))
             )
         }
         MenuScreenButtonGroup(
@@ -150,7 +157,6 @@ fun BaseMenuPreview() {
         options = DataSource.entreeMenuItems,
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium))
             .verticalScroll(rememberScrollState()),
         onCancelButtonClicked = {},
         onNextButtonClicked = {},

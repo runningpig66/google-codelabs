@@ -82,7 +82,7 @@ fun CheckoutScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium)),
+                .padding(vertical = dimensionResource(R.dimen.padding_medium)),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
             OutlinedButton(
@@ -141,7 +141,7 @@ fun CheckoutPreview() {
         ),
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium))
+            .padding(horizontal = dimensionResource(R.dimen.padding_medium))
             .verticalScroll(rememberScrollState()),
         onNextButtonClicked = {},
         onCancelButtonClicked = {}
