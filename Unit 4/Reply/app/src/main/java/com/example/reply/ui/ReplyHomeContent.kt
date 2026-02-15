@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +37,9 @@ import com.example.reply.R
 import com.example.reply.data.Email
 import com.example.reply.data.local.LocalAccountsDataProvider
 import com.example.reply.ui.theme.ReplyTheme
+import com.example.reply.ui.utils.PhonePreviews
+import com.example.reply.ui.utils.ReplyUiStateProvider
+import com.example.reply.ui.utils.TabletPreviews
 
 /**
  * @author runningpig66
@@ -53,7 +55,6 @@ fun ReplyListOnlyContent(
     val emails = replyUiState.currentMailboxEmails
     LazyColumn(
         modifier = modifier,
-        contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.email_list_item_vertical_spacing))
     ) {
         item {
@@ -82,6 +83,7 @@ fun ReplyListAndDetailContent(
     val emails = replyUiState.currentMailboxEmails
     Row(
         modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         LazyColumn(
             modifier = Modifier
@@ -260,7 +262,7 @@ fun ReplyListAndDetailContentPreview(
     @PreviewParameter(ReplyUiStateProvider::class) uiState: ReplyUiState
 ) {
     ReplyTheme {
-        // TODO 建议再加一层 Surface，确保背景色也能正确变成深色
+        // Surface 确保背景色也能正确变成深色
         Surface {
             ReplyListAndDetailContent(
                 replyUiState = uiState,

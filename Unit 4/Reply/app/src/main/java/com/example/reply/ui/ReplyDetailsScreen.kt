@@ -1,6 +1,7 @@
 package com.example.reply.ui
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +39,8 @@ import com.example.reply.R
 import com.example.reply.data.Email
 import com.example.reply.data.MailboxType
 import com.example.reply.ui.theme.ReplyTheme
+import com.example.reply.ui.utils.PhonePreviews
+import com.example.reply.ui.utils.ReplyUiStateProvider
 
 /**
  * @author runningpig66
@@ -49,6 +53,9 @@ fun ReplyDetailsScreen(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    BackHandler {
+        onBackPressed()
+    }
     Box(modifier = modifier) {
         LazyColumn(
             contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
@@ -125,7 +132,10 @@ private fun ReplyEmailDetailsCard(
     val displayToast = { text: String ->
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
-    Card(modifier = modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

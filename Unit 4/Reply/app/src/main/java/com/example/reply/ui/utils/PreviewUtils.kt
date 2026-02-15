@@ -1,4 +1,4 @@
-package com.example.reply.ui
+package com.example.reply.ui.utils
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Devices
@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.reply.data.MailboxType
 import com.example.reply.data.local.LocalEmailsDataProvider
+import com.example.reply.ui.ReplyUiState
 
 /**
  * @author runningpig66
