@@ -43,9 +43,10 @@ import com.example.reply.data.Email
 import com.example.reply.data.MailboxType
 import com.example.reply.data.local.LocalAccountsDataProvider
 import com.example.reply.ui.theme.ReplyTheme
+import com.example.reply.ui.utils.PhonePreviews
+import com.example.reply.ui.utils.ReplyContentType
 import com.example.reply.ui.utils.ReplyNavigationType
 import com.example.reply.ui.utils.ReplyUiStateProvider
-import com.example.reply.ui.utils.TabletPreviews
 
 /**
  * @author runningpig66
@@ -55,6 +56,7 @@ import com.example.reply.ui.utils.TabletPreviews
 @Composable
 fun ReplyHomeScreen(
     navigationType: ReplyNavigationType,
+    contentType: ReplyContentType,
     replyUiState: ReplyUiState,
     onTabPressed: (MailboxType) -> Unit,
     onEmailCardPressed: (Email) -> Unit,
@@ -83,13 +85,15 @@ fun ReplyHomeScreen(
             text = stringResource(R.string.tab_spam)
         )
     )
-    if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER && replyUiState.isShowingHomepage) {
+    // if: 左侧大导航栏的情况下 PERMANENT_NAVIGATION_DRAWER，一定显示列表与详情 LIST_AND_DETAIL
+    if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
         val navigationDrawerContentDescription = stringResource(R.string.navigation_drawer)
         PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet(
                     modifier = Modifier.width(dimensionResource(R.dimen.drawer_width)),
-                    drawerContainerColor = MaterialTheme.colorScheme.inverseOnSurface
+                    drawerContainerColor = MaterialTheme.colorScheme.inverseOnSurface,
+                    // windowInsets = WindowInsets() // 防止双重 padding
                 ) {
                     NavigationDrawerContent(
                         selectedDestination = replyUiState.currentMailbox,
@@ -106,6 +110,7 @@ fun ReplyHomeScreen(
         ) {
             ReplyAppContent(
                 navigationType = navigationType,
+                contentType = contentType,
                 replyUiState = replyUiState,
                 onTabPressed = onTabPressed,
                 onEmailCardPressed = onEmailCardPressed,
@@ -113,10 +118,11 @@ fun ReplyHomeScreen(
                 modifier = modifier
             )
         }
-    } else {
+    } else { // else: 其他两种横屏或者竖屏小导航条的情况下，一定显示单页内容
         if (replyUiState.isShowingHomepage) {
             ReplyAppContent(
                 navigationType = navigationType,
+                contentType = contentType,
                 replyUiState = replyUiState,
                 onTabPressed = onTabPressed,
                 onEmailCardPressed = onEmailCardPressed,
@@ -127,7 +133,8 @@ fun ReplyHomeScreen(
             ReplyDetailsScreen(
                 replyUiState = replyUiState,
                 onBackPressed = onDetailScreenBackPressed,
-                modifier = modifier
+                modifier = modifier,
+                isFullScreen = true
             )
         }
     }
@@ -136,6 +143,7 @@ fun ReplyHomeScreen(
 @Composable
 private fun ReplyAppContent(
     navigationType: ReplyNavigationType,
+    contentType: ReplyContentType,
     replyUiState: ReplyUiState,
     onTabPressed: (MailboxType) -> Unit,
     onEmailCardPressed: (Email) -> Unit,
@@ -158,21 +166,30 @@ private fun ReplyAppContent(
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
             ) {
-                ReplyListOnlyContent(
-                    replyUiState = replyUiState,
-                    onEmailCardPressed = onEmailCardPressed,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding))
-                        .padding(top = dimensionResource(R.dimen.detail_subject_padding_end))
-                )
+                if (contentType == ReplyContentType.LIST_AND_DETAIL) {
+                    ReplyListAndDetailContent(
+                        replyUiState = replyUiState,
+                        onEmailCardPressed = onEmailCardPressed,
+                        modifier = Modifier.weight(1f)
+                    )
+                } else {
+                    ReplyListOnlyContent(
+                        replyUiState = replyUiState,
+                        onEmailCardPressed = onEmailCardPressed,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding))
+                    )
+                }
                 AnimatedVisibility(visible = navigationType == ReplyNavigationType.BOTTOM_NAVIGATION) {
                     val bottomNavigationContentDescription = stringResource(R.string.navigation_bottom)
                     ReplyBottomNavigationBar(
                         currentTab = replyUiState.currentMailbox,
                         onTabPressed = onTabPressed,
                         navigationItemContentList = navigationItemContentList,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(bottomNavigationContentDescription)
                     )
                 }
             }
@@ -187,7 +204,10 @@ private fun ReplyNavigationRail(
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier,
 ) {
-    NavigationRail(modifier = modifier) {
+    NavigationRail(
+        modifier = modifier,
+        // windowInsets = WindowInsets() // 防止双重 padding
+    ) {
         for (navItem in navigationItemContentList) {
             NavigationRailItem(
                 selected = currentTab == navItem.mailboxType,
@@ -210,7 +230,10 @@ private fun ReplyBottomNavigationBar(
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(
+        modifier = modifier,
+        // windowInsets = WindowInsets() // 防止双重 padding
+    ) {
         for (navItem in navigationItemContentList) {
             NavigationBarItem(
                 selected = currentTab == navItem.mailboxType,
@@ -285,14 +308,15 @@ private data class NavigationItemContent(
     val text: String
 )
 
-@TabletPreviews
+@PhonePreviews
 @Composable
 fun ReplyHomePreview(
     @PreviewParameter(ReplyUiStateProvider::class) uiState: ReplyUiState
 ) {
     ReplyTheme {
         ReplyHomeScreen(
-            navigationType = ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER,
+            navigationType = ReplyNavigationType.BOTTOM_NAVIGATION,
+            contentType = ReplyContentType.LIST_ONLY,
             replyUiState = uiState,
             onTabPressed = {},
             onEmailCardPressed = {},
@@ -300,3 +324,20 @@ fun ReplyHomePreview(
         )
     }
 }
+
+//@TabletLandscapePreviews
+//@Composable
+//fun ReplyHomePreview(
+//    @PreviewParameter(ReplyUiStateProvider::class) uiState: ReplyUiState
+//) {
+//    ReplyTheme {
+//        ReplyHomeScreen(
+//            navigationType = ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER,
+//            contentType = ReplyContentType.LIST_AND_DETAIL,
+//            replyUiState = uiState,
+//            onTabPressed = {},
+//            onEmailCardPressed = {},
+//            onDetailScreenBackPressed = {}
+//        )
+//    }
+//}

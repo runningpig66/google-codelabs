@@ -6,14 +6,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import com.example.reply.R
 import com.example.reply.data.Email
 import com.example.reply.data.local.LocalAccountsDataProvider
@@ -89,7 +87,7 @@ fun ReplyListAndDetailContent(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding)),
-            contentPadding = WindowInsets.statusBars.asPaddingValues(),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.email_list_item_vertical_spacing))
         ) {
             items(items = emails, key = { email -> email.id }) { email ->
@@ -103,10 +101,10 @@ fun ReplyListAndDetailContent(
         val activity = LocalActivity.current
         ReplyDetailsScreen(
             replyUiState = replyUiState,
-            onBackPressed = {},
+            onBackPressed = { activity?.finish() },
             modifier = Modifier
-                .padding(top = dimensionResource(R.dimen.email_list_item_vertical_spacing))
                 .weight(1f)
+                .padding(end = dimensionResource(R.dimen.email_list_only_horizontal_padding)),
         )
     }
 }
@@ -266,8 +264,7 @@ fun ReplyListAndDetailContentPreview(
         Surface {
             ReplyListAndDetailContent(
                 replyUiState = uiState,
-                onEmailCardPressed = {},
-                modifier = Modifier.fillMaxSize()
+                onEmailCardPressed = {}
             )
         }
     }
