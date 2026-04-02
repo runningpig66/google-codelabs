@@ -12,7 +12,7 @@ import com.example.racetracker.ui.RaceTrackerApp
 import com.example.racetracker.ui.theme.RaceTrackerTheme
 
 // Unit 5: Introduction to Coroutines in Android Studio
-// https://github.com/google-developer-training/basic-android-kotlin-compose-training-race-tracker/tree/starter
+// https://github.com/google-developer-training/basic-android-kotlin-compose-training-race-tracker/tree/main
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
