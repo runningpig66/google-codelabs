@@ -40,7 +40,7 @@ fun MarsPhotosApp() {
         // TopAppBar 会监听这些数据的变化，动态计算自身的位移 (TranslationY) 或高度，从而实现自动折叠/展开的丝滑视差动画。
         topBar = { MarsTopAppBar(scrollBehavior = scrollBehavior) }
     ) { innerPadding ->
-        val marsViewModel: MarsViewModel = viewModel()
+        val marsViewModel: MarsViewModel = viewModel(factory = MarsViewModel.Factory)
         HomeScreen(
             marsUiState = marsViewModel.marsUiState,
             modifier = Modifier

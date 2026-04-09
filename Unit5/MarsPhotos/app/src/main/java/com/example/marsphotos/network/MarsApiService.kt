@@ -1,40 +1,19 @@
 package com.example.marsphotos.network
 
 import com.example.marsphotos.model.MarsPhoto
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
 
 /**
  * @author runningpig66
  * @date 2026-04-03
  * @time 2:22
- */
-private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
-
-/**
- * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
- */
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .baseUrl(BASE_URL)
-    .build()
-
-/**
- * Retrofit service object for creating api calls
+ * A public interface that exposes the [getPhotos] method.
  */
 interface MarsApiService {
+    /**
+     * Returns a [List] of [MarsPhoto] and this method can be called from a Coroutine.
+     * The @GET annotation indicates that the "photos" endpoint will be requested with the GET HTTP method.
+     */
     @GET("photos")
     suspend fun getPhotos(): List<MarsPhoto>
-}
-
-/**
- * A public Api object that exposes the lazy-initialized Retrofit service
- */
-object MarsApi {
-    val retrofitService: MarsApiService by lazy {
-        retrofit.create(MarsApiService::class.java)
-    }
 }
