@@ -8,7 +8,7 @@ import com.example.marsphotos.ui.MarsPhotosApp
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
 
 // Unit 5: Get data from the internet
-// https://github.com/google-developer-training/basic-android-kotlin-compose-training-mars-photos/tree/coil-starter
+// https://github.com/google-developer-training/basic-android-kotlin-compose-training-mars-photos/tree/main
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

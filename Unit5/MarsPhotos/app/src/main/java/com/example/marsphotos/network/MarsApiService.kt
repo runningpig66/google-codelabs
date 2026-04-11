@@ -7,6 +7,7 @@ import retrofit2.http.GET
  * @author runningpig66
  * @date 2026-04-03
  * @time 2:22
+ *
  * A public interface that exposes the [getPhotos] method.
  */
 interface MarsApiService {

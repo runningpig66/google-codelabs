@@ -10,6 +10,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
  * @author runningpig66
  * @date 2026-04-09
  * @time 6:37
+ *
  * Dependency Injection container at the application level.
  */
 interface AppContainer {
@@ -27,7 +28,7 @@ class DefaultAppContainer : AppContainer {
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
      */
-    private val retrofit = Retrofit.Builder()
+    private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
