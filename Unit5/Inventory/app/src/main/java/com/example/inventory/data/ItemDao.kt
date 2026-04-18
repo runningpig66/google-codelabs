@@ -13,10 +13,12 @@ import kotlinx.coroutines.flow.Flow
  * @date 2026-04-15
  * @time 22:34
  *
- * Data Access Object (DAO) 数据访问对象
+ * Database access object (DAO) to access the Inventory database
  */
 @Dao
 interface ItemDao {
+    // Specify the conflict strategy as IGNORE, when the user tries to add an
+    // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Item)
 
@@ -27,7 +29,7 @@ interface ItemDao {
     suspend fun delete(item: Item)
 
     @Query("SELECT * FROM items WHERE id = :id")
-    fun getItem(id: Int): Flow<Item>
+    fun getItem(id: Int): Flow<Item?>
 
     @Query("SELECT * FROM items ORDER BY name ASC")
     fun getAllItems(): Flow<List<Item>>

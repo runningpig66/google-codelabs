@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -18,6 +19,7 @@ import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
 import com.example.inventory.ui.utils.PhonePreviews
+import kotlinx.coroutines.launch
 
 /**
  * @author runningpig66
@@ -31,13 +33,41 @@ object ItemEditDestination : NavigationDestination {
     val routeWithArgs = "$route/{$itemIdArg}"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemEditScreen(
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ItemEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val itemUiState = viewModel.itemUiState
+    val coroutineScope = rememberCoroutineScope()
+    ItemEditScreenContent(
+        itemUiState = itemUiState,
+        onNavigateUp = onNavigateUp,
+        onItemValueChange = viewModel::updateUiState,
+        onSaveClick = {
+            // Note: If the user rotates the screen very fast, the operation may get cancelled
+            // and the item may not be updated in the Database. This is because when config
+            // change occurs, the Activity will be recreated and the rememberCoroutineScope will
+            // be cancelled - since the scope is bound to composition.
+            coroutineScope.launch {
+                viewModel.updateItem()
+                navigateBack()
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ItemEditScreenContent(
+    itemUiState: ItemUiState,
+    onNavigateUp: () -> Unit,
+    onItemValueChange: (ItemDetails) -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
@@ -50,9 +80,9 @@ fun ItemEditScreen(
         modifier = modifier
     ) { innerPadding ->
         ItemEntryBody(
-            itemUiState = viewModel.itemUiState,
-            onItemValueChange = { },
-            onSaveClick = { },
+            itemUiState = itemUiState,
+            onItemValueChange = onItemValueChange,
+            onSaveClick = onSaveClick,
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -68,6 +98,14 @@ fun ItemEditScreen(
 @Composable
 fun ItemEditScreenPreview() {
     InventoryTheme {
-        ItemEditScreen(navigateBack = { /*Do nothing*/ }, onNavigateUp = { /*Do nothing*/ })
+        ItemEditScreenContent(
+            itemUiState = ItemUiState(
+                itemDetails = ItemDetails(name = "Item name", price = "10.00", quantity = "5"),
+                isEntryValid = true
+            ),
+            onNavigateUp = {},
+            onItemValueChange = {},
+            onSaveClick = {}
+        )
     }
 }

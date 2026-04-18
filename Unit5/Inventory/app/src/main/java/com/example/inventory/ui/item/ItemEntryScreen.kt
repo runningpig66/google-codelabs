@@ -51,14 +51,17 @@ fun ItemEntryScreen(
     canNavigateBack: Boolean = true,
     viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val itemUiState = viewModel.itemUiState
     val coroutineScope = rememberCoroutineScope()
     ItemEntryScreenContent(
-        itemUiState = itemUiState,
+        itemUiState = viewModel.itemUiState,
         onNavigateUp = onNavigateUp,
         canNavigateBack = canNavigateBack,
         onItemValueChange = viewModel::updateUiState,
         onSaveClick = {
+            // Note: If the user rotates the screen very fast, the operation may get cancelled
+            // and the item may not be saved in the Database. This is because when config
+            // change occurs, the Activity will be recreated and the rememberCoroutineScope will
+            // be cancelled - since the scope is bound to composition.
             coroutineScope.launch {
                 viewModel.saveItem()
                 navigateBack()
